@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "help.h": "c",
+        "main.h": "c",
+        "structs.h": "c",
+        "parse_moves.h": "c",
+        "moves.h": "c"
+    }
+}

@@ -1,0 +1,68 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{parskip}
+\geometry{a4paper, margin=1in}
+
+\title{ARMv8 Final Report}
+\author{\emph{Group 56: Marilyn(mab223), Nandita(ns3023), Shrinidhi(ss12723), Sukruthi(ss7623)}}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Assembler Implementation}
+
+Throughout our code, we made effective use of modularisation to organise our code and achieve good clarity in our assembler implementation. We also incorporated C functionalities by using multiple functions from the \texttt{string.h} header file, structs, and pointers.
+
+In general, our assembler is split into four steps. We have implemented two-pass assembly. On the first pass, the input file is opened, and the symbol table is constructed by iterating through each line and checking if the line is a label. The label is then stored as the key in the symbol table, which is implemented as a hash map. Next, we iterate through each instruction, and a parse function parses the instruction, and the corresponding function is called. The function writes the binary equivalent of the current instruction into an array. Finally, the array is iterated through, and the binary file is written to.
+
+The assembler first calls a function that parses the \texttt{.s} file into instructions and checks the instructions for labels and generates a symbol table. Then the assembler iterates through each instruction, and first, each instruction is tokenized and the function decides if it is an empty line, a label, or an instruction. In the case of an empty line, we do nothing. The instruction is then parsed and separated; global variables are used to assign the opcode, operands, and labels. These global variables change as the assembler iterates through the file.
+
+We grouped instructions with similar opcodes and functionalities to make the code for functions more organised. The function refers to the opcode, operand, and label global variables and, according to the spec, builds up the binary instruction as a string using \texttt{string.h} library functions. This binary string is then converted into a signed decimal integer and stored inside a global array.
+
+To write to the binary file, the function iterates through the global array containing signed decimal integers and writes to the file specified by using the \texttt{fwrite()} function from the \texttt{stdio.h} library.
+
+\section{Raspberry Pi LED Blinking Implementation}
+
+To set up the Raspberry Pi, we used \texttt{.int} directives from our assembler. If instead we used load literal, it would access the contents of the immediate address rather than the address itself. Therefore, to accommodate the 32-bit number loaded onto the Raspberry Pi, we used \texttt{.int} directives. Specifically, we employed four \texttt{.int} directives for the base address, the counter, the pin offset, and the setting address. Additionally, we used four labels: \texttt{start}, \texttt{loop}, \texttt{delay1}, and \texttt{delay2}.
+
+The \texttt{start} label loads the base address into a register, sets the specific pin we are using (pin 21), and initialises the counter. The program then enters the \texttt{loop} label, where we first set the chosen GPIO pin to output a high signal, which turns the LED on. Next, we implement \texttt{delay1}, which increments a chosen register and compares it to the counter, branching back to \texttt{delay1} until they are equal. Once \texttt{delay1} is exited, the GPIO pin is cleared, sending a low signal that turns the LED off. \texttt{delay2} is then entered and implemented similarly to \texttt{delay1}. Finally, we unconditionally branch back to the \texttt{loop} label, creating an infinite loop that causes the LED to blink continuously.
+
+\section{Extension: Checkers}
+
+\subsection{Overview}
+
+\subsection{Implementation}
+
+\subsection{Testing}
+
+\section{End of Project Reflections}
+
+\subsection{Summary}
+
+When we embarked on this project, we had only been working with C for one week, making the transition to low-level C-Assembly quite challenging. The frequent segmentation faults provided little insight into the sources of errors, so we quickly adapted by using debugging tools like \texttt{gdb} and \texttt{Valgrind}. To ensure we could write and test our code efficiently, we consistently distributed tasks based on each team member's strengths.
+
+\subsection{Task Distribution}
+
+For each of the four sections of this project, we distributed the tasks based on time management and previous experiences coding with C. For example, if certain members wrote the code for a particular section in the emulator, they also wrote the same or similar section in the assembler. This allowed us to finish our tasks more efficiently as we already had prior knowledge about the logic and implementation. Furthermore, if certain members completed their sections before our expected deadline, they took the initiative to start debugging and making more tests pass.
+
+\subsection{Teamwork and Coordination}
+
+During this project, we utilised three primary communication channels. We used Google Docs to divide and assign tasks before starting each section. WhatsApp was our platform for daily communication regarding task status and overall project updates. Additionally, we used Discord for pair programming, particularly in the early stages of developing the assembler and emulator when writing code that impacted other tasks and their implementation. Pair programming was also very beneficial during debugging when another person’s perspective was useful in completing the task. At first, we were inexperienced with using \texttt{git} for large-scale projects, so before beginning, we researched how to manage our workflow and decided to make separate branches for each pair. We made different branches for different parts of the project to keep our code organised. Merge requests were used as an opportunity to review and refactor code before pushing it onto the master branch.
+
+\subsection{Improvements}
+
+For our emulator, we represented instructions using strings. In hindsight, using bit shifting to manipulate the instructions would have been a more efficient approach. Additionally, in a large project, despite having agreed on a coding style beforehand, we occasionally encountered inconsistencies. This required us to spend additional time after completing the code to ensure a consistent coding style. We also have sections of duplicated code in our implementation of the assembler; given more time, we would optimise and abstract this.
+
+\subsection{Individual Reflections}
+
+\subsubsection{Marilyn Ann Biju}
+
+\subsubsection{Nandita Suresh Babu}
+
+\subsubsection{Shrinidhi Satish}
+
+\subsubsection{Sukruthi Santosh}
+
+\end{document}
